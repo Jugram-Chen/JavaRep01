@@ -1,0 +1,57 @@
+import java.util.Collections;
+import java.util.HashMap;
+
+/**
+ * @author Jugram Chen
+ * @create 2020-08-11 12:17
+ */
+public class LongestSubstringwithAtMostKDistinctCharacters {
+    //    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+//        int max=0;
+//        for(int i=0;i<=s.length()-k;i++){
+//            HashSet<Character> hs=new HashSet<>();
+//            int temp=0;
+//            for(int j=i;j<s.length();j++){
+//                hs.add(s.charAt(j));
+//                if(hs.size()<=k)
+//                    temp++;
+//                else
+//                    break;
+//            }
+//            max=Math.max(max,temp);
+//        }
+//        return max;
+//    }
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int n = s.length();
+        if (n * k == 0) return 0;
+
+        // sliding window left and right pointers
+        int left = 0;
+        int right = 0;
+        // hashmap character -> its rightmost position
+        // in the sliding window
+        HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
+
+        int max_len = 1;
+
+        while (right < n) {
+            // add new character and move right pointer
+            hashmap.put(s.charAt(right), right++);
+
+            // slidewindow contains 3 characters
+            if (hashmap.size() == k + 1) {
+                // delete the leftmost character
+                int del_idx = Collections.min(hashmap.values());
+                hashmap.remove(s.charAt(del_idx));
+                // move left pointer of the slidewindow
+                left = del_idx + 1;
+            }
+
+            max_len = Math.max(max_len, right - left);
+        }
+        return max_len;
+    }
+
+}
+
